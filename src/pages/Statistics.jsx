@@ -17,15 +17,17 @@ const Statistics = () => {
             try {
                 const ref = collection(db, 'inventoryHistory');
                 const snapshot = await getDocs(ref);
-                const historyList = snapshot.docs.map((doc, index) => {
+                const historyList = snapshot.docs
+                .map((doc, index) => {
                     const data = doc.data();
                     return {
                         id: doc.id,
                         ...data,
                         index: index + 1,
-                        timestamp: data.timestamp?.toDate().toLocaleString() || 'N/A'  
+                        timestamp: data.timestamp?.toDate().toLocaleString() || 'N/A'
                     };
-                });
+                })
+                .sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
                 setHistory(historyList)
             } catch (error) {
                 console.error("Error fetching users: ", error);
